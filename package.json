@@ -1,6 +1,6 @@
 {
   "name": "proximo-feriado",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Mostra o próximo feriado",
   "main": "src/proximo-feriado.js",
   "scripts": {
