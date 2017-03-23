@@ -1,6 +1,6 @@
 {
   "name": "proximo-feriado",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Mostra o próximo feriado",
   "main": "src/proximo-feriado.js",
   "scripts": {
@@ -10,6 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/gjlacerda/proximo-feriado.git"
   },
+  "bin": "src/proximo-feriado.js",
   "keywords": [
     "próximo",
     "feriado"
