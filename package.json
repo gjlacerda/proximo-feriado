@@ -1,8 +1,8 @@
 {
   "name": "proximo-feriado",
   "version": "1.0.0",
-  "description": "Indica o próximo feriado",
-  "main": "index.js",
+  "description": "Mostra o próximo feriado",
+  "main": "src/proximo-feriado.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
