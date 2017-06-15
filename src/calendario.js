@@ -79,7 +79,7 @@ class Calendario {
         let nextHolidays = holidays.events.event.filter(h => {
 
             let validType = HOLIDAY_TYPES.indexOf(h.type) !== -1;
-            
+
             return validType && today < this.toDateUS(h.date);
         });
 
@@ -112,7 +112,24 @@ class Calendario {
      * @returns {string}
      */
     jsonToHumans(holiday) {
-        return `${holiday.date}: ${holiday.name}`;
+
+        let message = `${holiday.date}: ${holiday.name}\nFaltam: ${this.getDaysDifference(holiday.date)} dia(s)`;
+
+        return message;
+    }
+
+    /**
+     * Calcula a diferença de dias entre as datas
+     * @param date
+     */
+    getDaysDifference(date) {
+
+        let today      = new Date(moment.tz(+new Date(), "America/Sao_Paulo").format()),
+            momentDate = new Date(moment.tz(this.toDateUS(date), "America/Sao_Paulo").format()),
+            timeDiff   = Math.abs(momentDate.getTime() - today.getTime()),
+            diffDays   = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+        return diffDays;
     }
 
 }
