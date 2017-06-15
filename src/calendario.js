@@ -7,6 +7,7 @@ const URL           = 'http://www.calendario.com.br/api/api_feriados.php';
 const HOLIDAY_TYPES = ['Facultativo', 'Feriado Nacional', 'Feriado Estadual', 'Feriado Municipal'];
 const request       = require('request');
 const xml2json      = require('xml2json');
+const moment        = require('moment-timezone');
 
 class Calendario {
 
@@ -36,8 +37,7 @@ class Calendario {
         request(this.mountUrl(params), (error, response, body) => {
 
             if (error) {
-                console.log('Deu ruim: ' + error);
-                return;
+                return console.log('Deu ruim: ' + error);
             }
 
             let holidays    = JSON.parse(xml2json.toJson(body)),
@@ -73,13 +73,13 @@ class Calendario {
      */
     searchNextHoliday(holidays) {
 
-        let today = new Date();
+        let today = moment.tz(+new Date(), "America/Sao_Paulo").format();
 
         // Filtra os feriados com data maior que hoje e somente nacionais/municipais/estadual/facultativo
         let nextHolidays = holidays.events.event.filter(h => {
 
             let validType = HOLIDAY_TYPES.indexOf(h.type) !== -1;
-
+            
             return validType && today < this.toDateUS(h.date);
         });
 
@@ -88,7 +88,7 @@ class Calendario {
 
             let dateA = this.toDateUS(a.date);
             let dateB = this.toDateUS(b.date);
-            
+
             return dateA < dateB ? a : b;
         });
     }
@@ -100,9 +100,10 @@ class Calendario {
      */
     toDateUS(date) {
 
-        let arrDate = date.split('/');
+        let arrDate  = date.split('/'),
+            USformat = `${arrDate[2]}-${arrDate[1]}-${arrDate[0]}`;
 
-        return new Date(`${arrDate[2]}-${arrDate[1]}-${arrDate[0]}`);
+        return moment.tz(USformat, "America/Sao_Paulo").format()
     }
 
     /**
@@ -111,7 +112,7 @@ class Calendario {
      * @returns {string}
      */
     jsonToHumans(holiday) {
-        return `O próximo feriado é ${holiday.name} em ${holiday.date}`;
+        return `${holiday.date}: ${holiday.name}`;
     }
 
 }
