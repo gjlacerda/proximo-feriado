@@ -2,6 +2,6 @@
 
 'use strict';
 
-const Calendario = require('./calendario');
+const Calendario = require('./Calendario');
 
 Calendario.get({ cidade: 'Bauru' });

@@ -2,12 +2,13 @@
 
 'use strict';
 
-const TOKEN         = 'Z3VpbGhlcm1lLmxjZEBnbWFpbC5jb20maGFzaD00MjAzOTE4OA==';
-const URL           = 'http://www.calendario.com.br/api/api_feriados.php';
-const HOLIDAY_TYPES = ['Facultativo', 'Feriado Nacional', 'Feriado Estadual', 'Feriado Municipal'];
-const request       = require('request');
-const xml2json      = require('xml2json');
-const moment        = require('moment-timezone');
+const token        = 'Z3VpbGhlcm1lLmxjZEBnbWFpbC5jb20maGFzaD00MjAzOTE4OA==';
+const url          = 'http://www.calendario.com.br/api/api_feriados.php';
+const holydayTypes = ['Facultativo', 'Feriado Nacional', 'Feriado Estadual', 'Feriado Municipal'];
+const request      = require('request');
+const xml2json     = require('xml2json');
+const moment       = require('moment-timezone');
+const longDays     = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
 
 class Calendario {
 
@@ -26,7 +27,7 @@ class Calendario {
     get(additionalParams) {
 
         let params = {
-            token: TOKEN,
+            token: token,
             estado: 'SP',
             cidade: 'SAO_PAULO',
             ano: this.currentYear
@@ -63,7 +64,7 @@ class Calendario {
 
         let stringKeys = arrKeys.join('&');
 
-        return `${URL}?${stringKeys}`;
+        return `${url}?${stringKeys}`;
     }
 
     /**
@@ -78,7 +79,7 @@ class Calendario {
         // Filtra os feriados com data maior que hoje e somente nacionais/municipais/estadual/facultativo
         let nextHolidays = holidays.events.event.filter(h => {
 
-            let validType = HOLIDAY_TYPES.indexOf(h.type) !== -1;
+            let validType = holydayTypes.indexOf(h.type) !== -1;
 
             return validType && today < this.toDateUS(h.date);
         });
@@ -113,7 +114,13 @@ class Calendario {
      */
     jsonToHumans(holiday) {
 
-        let message = `${holiday.date}: ${holiday.name}\nFaltam: ${this.getDaysDifference(holiday.date)} dia(s)`;
+        let dateUS  = this.toDateUS(holiday.date),
+            dayLong = this.getDayLong(dateUS),
+            message;
+
+        message = `${holiday.date}: ${holiday.name}\n`;
+        message += `Faltam: ${this.getDaysDifference(holiday.date)} dia(s)\n`;
+        message += `Cairá em um(a) ${dayLong}`;
 
         return message;
     }
@@ -130,6 +137,14 @@ class Calendario {
             diffDays   = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
         return diffDays;
+    }
+
+    getDayLong(date) {
+
+        let newDate = new Date(date);
+
+        return longDays[newDate.getDay()];
+
     }
 
 }
