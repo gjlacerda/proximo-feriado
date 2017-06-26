@@ -4,4 +4,4 @@
 
 const Calendario = require('./Calendario');
 
-Calendario.get({ cidade: 'Bauru' });
+Calendario.get();

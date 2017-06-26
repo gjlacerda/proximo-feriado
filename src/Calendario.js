@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 'use strict';
 
 const token        = 'Z3VpbGhlcm1lLmxjZEBnbWFpbC5jb20maGFzaD00MjAzOTE4OA==';
